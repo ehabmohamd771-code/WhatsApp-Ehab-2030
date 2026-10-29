@@ -2,6 +2,7 @@
 
 buildscript {
     repositories {
+        maven { url 'https://repository.liferay.com/nexus/content/repositories/public/' }
         maven { url 'https://dl.google.com/dl/android/maven2/' }
         mavenCentral()
     }
@@ -15,6 +16,7 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url 'https://repository.liferay.com/nexus/content/repositories/public/' }
         maven { url 'https://dl.google.com/dl/android/maven2/' }
         mavenCentral()
     }
