@@ -12,6 +12,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-22.04
+
     env:
       ANDROID_HOME: /usr/local/lib/android/sdk
 
@@ -19,18 +20,28 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v4
 
-      - name: Setup Java 17
+      - name: Setup Java 17 for Android SDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
 
+      - name: Locate Android SDK Manager
+        run: |
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -f "$SDKMANAGER" ]; then
+            echo "sdkmanager was not found at $SDKMANAGER"
+            find "$ANDROID_HOME" -type f -name sdkmanager 2>/dev/null || true
+            exit 1
+          fi
+          echo "SDKMANAGER=$SDKMANAGER" >> "$GITHUB_ENV"
+
       - name: Accept Android SDK licenses
-        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses || true
+        run: yes | "$SDKMANAGER" --licenses || true
 
       - name: Install Android SDK 25
         run: |
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-25" "build-tools;25.0.0"
+          "$SDKMANAGER" "platforms;android-25" "build-tools;25.0.0"
 
       - name: Setup Java 8 for legacy Gradle
         uses: actions/setup-java@v4
