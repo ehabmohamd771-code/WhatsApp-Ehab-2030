@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="kmods.res">
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application android:name="com.whatsapp.AppShell"
         android:allowBackup="true"
         android:icon="@drawable/icon"
