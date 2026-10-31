@@ -240,12 +240,7 @@ public class Utils {
         if(Utils.ctx == null || Privacy.pctx == null || Settings.sctx == null){
             Log.d("KMods", "Context var initialized to NULL!!!");
         }
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
-            final ShortcutsManager shortcutsManager = ShortcutsManager.getShortcutsManager(ctx);
-            if (shortcutsManager != null) {
-                shortcutsManager.loadShortcuts();
-            }
-        }
+        // تم تأجيل تحميل الاختصارات لتجنب الانهيار أثناء التهيئة.
         PrefSet();
     }
     private static void PrefSet(){
