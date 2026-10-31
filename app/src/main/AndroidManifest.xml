@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="kmods.res">
-    <application
+    <application android:name="com.whatsapp.Exo"
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="واتساب إيهاب 2030"
