@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - fix-whatsapp-2030
 
 permissions:
   contents: read
@@ -54,15 +54,16 @@ jobs:
       - name: Build APK
         run: |
           chmod +x gradlew
-          bash gradlew --no-daemon assembleDebug
+          bash gradlew --no-daemon assembleDebug --stacktrace
 
       - name: Check APK
         run: |
           find app/build/outputs/apk -type f -name "*.apk"
 
       - name: Upload APK
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: WhatsApp-Ehab-2030-APK
-          path: app/build/outputs/apk/debug/*.apk
+          path: app/build/outputs/apk/*.apk
           if-no-files-found: error

@@ -19,6 +19,6 @@ android {
 }
 
 dependencies {
-    provided files('libs/whatsapp-dex2jar.jar')
+    compile files('libs/whatsapp-dex2jar.jar')
     compile files('libs/fabric.jar')
 }
