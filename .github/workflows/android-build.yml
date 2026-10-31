@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - fix-whatsapp-2030
 
 permissions:
   contents: read
