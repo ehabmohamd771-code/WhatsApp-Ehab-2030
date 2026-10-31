@@ -1,3 +1,4 @@
+
 name: Build WhatsApp Ehab 2030
 
 on:
@@ -13,37 +14,38 @@ jobs:
   build:
     runs-on: ubuntu-22.04
 
-    env:
-      ANDROID_HOME: /usr/local/lib/android/sdk
-
     steps:
       - name: Checkout project
         uses: actions/checkout@v4
 
-      - name: Setup Java 17 for Android SDK
+      - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
 
-      - name: Locate Android SDK Manager
+      - name: Prepare isolated Android SDK
         run: |
-          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          SDKMANAGER="/usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager"
+          SDK_ROOT="$RUNNER_TEMP/android-sdk"
+
           if [ ! -f "$SDKMANAGER" ]; then
-            echo "sdkmanager was not found at $SDKMANAGER"
-            find "$ANDROID_HOME" -type f -name sdkmanager 2>/dev/null || true
+            echo "sdkmanager not found"
             exit 1
           fi
-          echo "SDKMANAGER=$SDKMANAGER" >> "$GITHUB_ENV"
 
-      - name: Accept Android SDK licenses
-        run: yes | "$SDKMANAGER" --licenses || true
+          mkdir -p "$SDK_ROOT"
 
-      - name: Install Android SDK 25
-        run: |
-          "$SDKMANAGER" "platforms;android-25" "build-tools;25.0.0"
+          echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK_ROOT" >> "$GITHUB_ENV"
 
-      - name: Setup Java 8 for legacy Gradle
+          yes | "$SDKMANAGER" --sdk_root="$SDK_ROOT" --licenses || true
+
+          "$SDKMANAGER" --sdk_root="$SDK_ROOT" \
+            "platforms;android-25" \
+            "build-tools;25.0.0"
+
+      - name: Setup Java 8
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -53,6 +55,10 @@ jobs:
         run: |
           chmod +x gradlew
           bash gradlew --no-daemon assembleDebug
+
+      - name: Check APK
+        run: |
+          find app/build/outputs/apk -type f -name "*.apk"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
